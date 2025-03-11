@@ -7,7 +7,6 @@ pipeline {
     }
 
     stages {
-       
 
         stage('Install Dependencies') {
             steps {
@@ -19,15 +18,15 @@ pipeline {
 
         stage('Run Playwright Tests') {
             steps {
-                 echo "🚀 Exécution des tests Playwright avec génération de rapport JUnit..."
-                sh 'npx playwright test --reporter=junit,junit-output=test-results/results.xml'
+                echo "🚀 Exécution des tests Playwright avec génération de rapport JUnit..."
+                sh 'npx playwright test --reporter=junit --output=test-results'
             }
         }
 
         stage('Publish Test Report') {
             steps {
-                 echo "📊 Publication du rapport JUnit sur Jenkins..."
-                junit 'test-results/results.xml'
+                echo "📊 Publication du rapport JUnit sur Jenkins..."
+                junit 'test-results/*.xml'
             }
         }
     }
