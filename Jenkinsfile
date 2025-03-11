@@ -17,8 +17,9 @@ pipeline {
 
         stage('Run Playwright Tests') {
             steps {
-                echo "🚀 Exécution des tests Playwright avec génération de rapport JUnit..."
-                sh 'npx playwright test --reporter=junit --output=test-results'
+            
+                 sh 'npx playwright test --reporter=line,allure-playwright'
+                stash name: 'allure-results', includes: 'allure-results/*'
             }
         }
 
@@ -32,7 +33,16 @@ pipeline {
 
     post {
         always {
-            cleanWs()
+            unstash 'allure-results' //extract results
+            script {
+                allure([
+                includeProperties: false,
+                jdk: '',
+                properties: [],
+                reportBuildPolicy: 'ALWAYS',
+                results: [[path: 'allure-results']]
+            ])
+            }
         }
     }
 }
