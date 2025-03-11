@@ -1,12 +1,19 @@
 pipeline {
-    agent {
-        docker {
-            image 'mcr.microsoft.com/playwright:v1.50.0-noble'
-            args '--user root'
-        }
+    environment {
+        DOCKER_HOST = "tcp://localhost:2375"
     }
 
+    agent any
+
     stages {
+        stage('Test Docker Connection') {
+            steps {
+                script {
+                    def dockerHost = sh(script: 'echo $DOCKER_HOST', returnStdout: true).trim()
+                    echo "DOCKER_HOST from Jenkins: ${dockerHost}"
+                }
+            }
+        }
 
         stage('Run Playwright Tests') {
             steps {
