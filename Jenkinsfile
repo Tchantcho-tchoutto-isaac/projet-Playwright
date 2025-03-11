@@ -2,7 +2,6 @@ pipeline {
     agent {
         docker {
             image 'mcr.microsoft.com/playwright:v1.50.0-noble'
-            args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
 
